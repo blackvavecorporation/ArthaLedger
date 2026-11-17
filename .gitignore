@@ -1,0 +1,31 @@
+node_modules
+.next
+out
+dist
+build
+coverage
+.DS_Store
+*.pem
+*.key
+*.p12
+*.crt
+
+# local env files
+.env
+.env.*
+!.env.example
+
+# prisma / local dev database
+.dev/
+*.log
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# uploads written locally
+public/uploads/*
+!public/uploads/.gitkeep

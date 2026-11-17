@@ -1,0 +1,481 @@
+// ArthaLedger — PostgreSQL schema
+// All website content is database-driven so the admin CMS can manage it.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  SPAM
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum ChatMode {
+  AI
+  FAQ
+  HUMAN
+}
+
+enum ChatSender {
+  VISITOR
+  ASSISTANT
+  SYSTEM
+}
+
+enum NavLocation {
+  HEADER
+  FOOTER
+}
+
+enum LegalPageType {
+  TERMS
+  PRIVACY
+  DISCLAIMER
+  COOKIE
+}
+
+// ---------------------------------------------------------------------------
+// Identity & access
+// ---------------------------------------------------------------------------
+
+model Role {
+  id          String      @id @default(cuid())
+  name        RoleName    @unique
+  description String?
+  users       AdminUser[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model AdminUser {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  isActive     Boolean    @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  auditLogs    AuditLog[]
+
+  @@index([roleId])
+}
+
+// ---------------------------------------------------------------------------
+// Global settings & branding
+// ---------------------------------------------------------------------------
+
+model WebsiteSettings {
+  id                    String   @id @default("main")
+  brandName             String   @default("ArthaLedger")
+  legalName             String   @default("[Firm Legal Name]")
+  tagline               String   @default("Your Business. Our Financial Expertise.")
+  logoUrl               String?
+  faviconUrl            String?
+  primaryPhone          String   @default("+91 90000 00000")
+  secondaryPhone        String?
+  businessEmail         String   @default("hello@arthaledger.example")
+  officeAddress         String   @default("[Office Address], Hyderabad, Telangana, India")
+  googleMapsEmbedUrl    String?
+  workingHours          String   @default("Monday – Saturday, 10:00 AM – 6:30 PM IST")
+  footerAbout           String?
+  footerCopyright       String?
+  whatsappEnabled       Boolean  @default(true)
+  whatsappNumber        String   @default("919000000000")
+  whatsappMessage       String   @default("Hello ArthaLedger, I would like to discuss a professional service.")
+  whatsappWelcomeMessage String  @default("Chat with our team on WhatsApp. Please avoid sharing passwords, OTPs or bank credentials.")
+  chatbotEnabled        Boolean  @default(true)
+  chatbotMode           ChatMode @default(AI)
+  chatbotWelcomeEn      String   @default("Hello! I can help you understand our services, collect an enquiry, or arrange a consultation. How can I help?")
+  chatbotWelcomeTe      String   @default("నమస్కారం! మా సేవల గురించి తెలుసుకోవడానికి, విచారణ నమోదు చేయడానికి లేదా సంప్రదింపు సమయం కోసం నేను సహాయం చేయగలను. మీకు ఎలా సహాయపడగలను?")
+  chatbotSystemPrompt   String?
+  chatbotModel          String   @default("gpt-4o-mini")
+  updatedAt             DateTime @updatedAt
+  createdAt             DateTime @default(now())
+}
+
+model NavItem {
+  id         String      @id @default(cuid())
+  label      String
+  href       String
+  location   NavLocation @default(HEADER)
+  order      Int         @default(0)
+  isVisible  Boolean     @default(true)
+  isExternal Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([location, order])
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  url       String
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Page content
+// ---------------------------------------------------------------------------
+
+model HomePageContent {
+  id                     String   @id @default("main")
+  heroEyebrow            String   @default("Chartered Accountancy & Business Advisory")
+  heroTitle              String   @default("Financial clarity for")
+  heroTitleAccent        String   @default("ambitious businesses.")
+  heroDescription        String   @default("ArthaLedger brings accounting, tax and compliance discipline together with practical business advice — so you can make confident decisions with clean numbers behind you.")
+  primaryCtaLabel        String   @default("Book a consultation")
+  primaryCtaHref         String   @default("/contact")
+  secondaryCtaLabel      String   @default("Explore services")
+  secondaryCtaHref       String   @default("/services")
+  heroTrustLine          String   @default("Confidential, professional and responsive support for growing Indian businesses.")
+  heroCardTitle          String   @default("Your compliance calendar")
+  heroCardSubtitle       String   @default("A clear view of what needs attention.")
+  servicesEyebrow        String   @default("What we do")
+  servicesTitle          String   @default("Professional services, built around your business")
+  servicesDescription    String   @default("From day-to-day bookkeeping to statutory compliance and advisory, every engagement begins with understanding your business.")
+  whyEyebrow             String   @default("Why ArthaLedger")
+  whyTitle               String   @default("A steadier financial foundation")
+  whyDescription         String   @default("You get a responsive team, documented processes and advice that stays grounded in your commercial reality.")
+  expertiseEyebrow       String   @default("Our expertise")
+  expertiseTitle         String   @default("Depth where it matters")
+  expertiseDescription   String   @default("Practical capability across tax, compliance, accounting and business advisory.")
+  testimonialsEyebrow    String   @default("Client voices")
+  testimonialsTitle      String   @default("Relationships built on trust")
+  testimonialsDescription String  @default("Only verified, approved client feedback is published on this website.")
+  faqEyebrow             String   @default("Questions, answered")
+  faqTitle               String   @default("Before you engage with us")
+  faqDescription         String   @default("Clear answers to the questions we hear most often. For advice on your specific facts, please speak with our team.")
+  ctaEyebrow             String   @default("Start a conversation")
+  ctaTitle               String   @default("Let us bring clarity to your finances.")
+  ctaDescription         String   @default("Tell us what you are working on. We will respond with a considered next step — no obligation.")
+  ctaButtonLabel         String   @default("Book a consultation")
+  ctaButtonHref          String   @default("/contact")
+  updatedAt              DateTime @updatedAt
+  createdAt              DateTime @default(now())
+}
+
+model AboutPageContent {
+  id              String   @id @default("main")
+  eyebrow         String   @default("About ArthaLedger")
+  title           String   @default("A financial partner that understands business")
+  introduction    String   @default("ArthaLedger is a professional chartered accountancy practice built to support founders and businesses with reliable numbers, timely compliance and sound commercial judgement.")
+  story           String   @default("We started ArthaLedger with a simple belief: financial services should be clear, responsive and connected to the decisions a business actually needs to make. Our work sits at the intersection of accounting, tax and compliance — with every engagement grounded in the client's context.")
+  vision          String   @default("To be the trusted financial backbone for India's next generation of well-run businesses.")
+  mission         String   @default("To deliver precise, timely and practical financial support that helps clients comply confidently and grow sustainably.")
+  imageUrl        String?
+  valuesTitle     String   @default("The principles behind our work")
+  teamTitle       String   @default("The people behind the practice")
+  teamDescription String   @default("Experienced professionals who take ownership, communicate plainly and treat your business with care.")
+  whyTitle        String   @default("Why clients choose us")
+  whyDescription  String   @default("We combine technical rigour with the responsiveness of a team that knows your business.")
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
+
+model Stat {
+  id          String   @id @default(cuid())
+  label       String
+  value       String
+  description String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WhyChooseItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String   @default("ShieldCheck")
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ExpertiseItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String   @default("Briefcase")
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ValueItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String   @default("Handshake")
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id            String   @id @default(cuid())
+  name          String
+  designation   String
+  qualifications String?
+  bio           String?
+  imageUrl      String?
+  linkedinUrl   String?
+  order         Int      @default(0)
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Services, testimonials & FAQs
+// ---------------------------------------------------------------------------
+
+model ServiceCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  order       Int       @default(0)
+  isVisible   Boolean   @default(true)
+  services    Service[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Service {
+  id               String              @id @default(cuid())
+  title            String
+  slug             String              @unique
+  categoryId       String?
+  category         ServiceCategory?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  shortDescription String
+  description      String              @db.Text
+  icon             String              @default("Calculator")
+  imageUrl         String?
+  benefits         String[]            @default([])
+  ctaLabel         String              @default("Enquire about this service")
+  isFeatured       Boolean             @default(false)
+  status           ContentStatus       @default(PUBLISHED)
+  order            Int                 @default(0)
+  seoTitle         String?
+  seoDescription   String?
+  enquiries        ContactEnquiry[]
+  appointments     AppointmentRequest[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([status, order])
+  @@index([categoryId])
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  clientName  String
+  designation String?
+  company     String?
+  review      String   @db.Text
+  rating      Int      @default(5)
+  imageUrl    String?
+  isApproved  Boolean  @default(false)
+  isPublished Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isApproved, isPublished, order])
+}
+
+model FAQ {
+  id          String   @id @default(cuid())
+  question    String
+  answer      String   @db.Text
+  questionTe  String?
+  answerTe    String?
+  category    String?
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, order])
+}
+
+// ---------------------------------------------------------------------------
+// Enquiries & appointments
+// ---------------------------------------------------------------------------
+
+model ContactEnquiry {
+  id             String           @id @default(cuid())
+  name           String
+  email          String
+  phone          String
+  serviceId      String?
+  service        Service?         @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  serviceName    String?
+  message        String           @db.Text
+  source         String           @default("CONTACT_FORM")
+  status         EnquiryStatus    @default(NEW)
+  adminNote      String?
+  ipAddress      String?
+  userAgent      String?
+  conversationId String?
+  conversation   ChatConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([status, createdAt])
+  @@index([serviceId])
+  @@index([conversationId])
+}
+
+model AppointmentRequest {
+  id            String            @id @default(cuid())
+  name          String
+  email         String
+  phone         String
+  serviceId     String?
+  service       Service?          @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  serviceName   String?
+  preferredDate DateTime
+  preferredTime String
+  mode          String            @default("PHONE")
+  notes         String?           @db.Text
+  status        AppointmentStatus @default(PENDING)
+  adminNote     String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([status, preferredDate])
+  @@index([serviceId])
+}
+
+// ---------------------------------------------------------------------------
+// Chatbot
+// ---------------------------------------------------------------------------
+
+model ChatConversation {
+  id              String           @id @default(cuid())
+  sessionId       String           @unique
+  language        String           @default("en")
+  mode            ChatMode         @default(AI)
+  visitorName     String?
+  visitorEmail    String?
+  visitorPhone    String?
+  serviceInterest String?
+  isLead          Boolean          @default(false)
+  isEscalated     Boolean          @default(false)
+  summary         String?
+  messages        ChatMessage[]
+  enquiries       ContactEnquiry[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([isLead, createdAt])
+}
+
+model ChatMessage {
+  id             String           @id @default(cuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         ChatSender
+  content        String           @db.Text
+  createdAt      DateTime         @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Legal, SEO, media & audit
+// ---------------------------------------------------------------------------
+
+model LegalPage {
+  id             String        @id
+  type           LegalPageType @unique
+  slug           String        @unique
+  title          String
+  content        String        @db.Text
+  status         ContentStatus @default(PUBLISHED)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model SEOSettings {
+  id               String   @id @default("main")
+  siteTitle        String   @default("ArthaLedger | Chartered Accountancy & Business Advisory")
+  titleTemplate    String   @default("%s | ArthaLedger")
+  description      String   @default("ArthaLedger provides accounting, tax, GST, company registration and business advisory services for Indian businesses.")
+  keywords         String[] @default(["chartered accountant Hyderabad", "GST services", "income tax return filing", "company registration India", "business advisory"])
+  ogImageUrl       String?
+  canonicalBase    String?
+  twitterHandle    String?
+  gaMeasurementId  String?
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String?
+  filename  String
+  mimeType  String
+  size      Int
+  width     Int?
+  height    Int?
+  altText   String?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String     @id @default(cuid())
+  userId    String?
+  user      AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime   @default(now())
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([entity])
+}
