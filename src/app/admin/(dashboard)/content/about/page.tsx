@@ -28,7 +28,7 @@ export default async function AboutContentPage({
   if (!about) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-700">
-        About page content is not initialised. Run the database seed or migration.
+        Demo about page content is unavailable. Check the hardcoded content in src/data/site.ts.
       </div>
     );
   }

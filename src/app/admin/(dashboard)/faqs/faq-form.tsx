@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FAQ } from "@prisma/client";
+import type { FAQ } from "@/lib/demo-types";
 import { Save } from "lucide-react";
 import { saveFaq } from "@/actions/inquiries";
 import { CheckboxField, Field, FormActions, FormGrid, FormSection } from "@/components/admin/form";

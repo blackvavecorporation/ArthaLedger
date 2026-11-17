@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Service, ServiceCategory } from "@prisma/client";
+import type { Service, ServiceCategory } from "@/lib/demo-types";
 import { ExternalLink, Save } from "lucide-react";
 import { saveService } from "@/actions/services";
 import { CheckboxField, Field, FormActions, FormGrid, FormSection } from "@/components/admin/form";

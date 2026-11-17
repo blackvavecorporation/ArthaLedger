@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { getSeoSettings, getSettings } from "@/lib/content";
 import { absoluteUrl, truncate } from "@/lib/utils";
 
-export const FALLBACK_TITLE = "ArthaLedger | Chartered Accountancy & Business Advisory";
+export const FALLBACK_TITLE = "ArthaLedger | Chartered Accountancy Demo";
 export const FALLBACK_DESCRIPTION =
-  "ArthaLedger provides accounting, tax, GST, registration, compliance and business advisory services for Indian businesses.";
+  "A database-free demonstration website for a chartered accountancy and business advisory practice. Sample content only.";
 
 export async function getRootMetadata(): Promise<Metadata> {
   try {
@@ -70,7 +70,7 @@ export async function pageMetadata(options: {
     seoOgImage = seo?.ogImageUrl ?? null;
     base = seo?.canonicalBase || base;
   } catch {
-    // Metadata must remain renderable even if the database is not yet initialised.
+    // Metadata must remain renderable if the hardcoded demo content is unavailable.
   }
   const description = truncate(options.description, 300);
   const image = options.image || seoOgImage;

@@ -1,4 +1,4 @@
-import type { NavItem, SocialLink, Stat, TeamMember, ValueItem, WhyChooseItem, ExpertiseItem } from "@prisma/client";
+import type { NavItem, SocialLink, Stat, TeamMember, ValueItem, WhyChooseItem, ExpertiseItem } from "@/lib/demo-types";
 import { ChevronDown, Plus } from "lucide-react";
 import {
   deleteContentItem,

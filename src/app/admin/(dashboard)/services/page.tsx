@@ -120,7 +120,7 @@ export default async function AdminServicesPage({
                           id={service.id}
                           name={service.title}
                           title="Delete this service?"
-                          description="This permanently removes the service page and hides it from the chatbot. Existing enquiries retain a service name snapshot."
+                          description="This removes the sample service from the current demo session. It is restored on reload or restart."
                           compact
                         />
                       </div>

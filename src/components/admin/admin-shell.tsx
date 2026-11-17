@@ -98,7 +98,7 @@ export function AdminShell({
             ArthaLedger
           </p>
           <p className="text-[0.55rem] font-semibold uppercase tracking-[0.18em] text-white/35">
-            Admin console
+            Demo console
           </p>
         </div>
         <button
@@ -208,7 +208,7 @@ export function AdminShell({
             <Menu className="h-4 w-4" />
           </button>
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-navy-400">
-            Admin workspace
+            Demo workspace
           </p>
           <div className="ml-auto flex items-center gap-3">
             <a
@@ -241,6 +241,11 @@ export function AdminShell({
           </div>
         </header>
         <main className="mx-auto w-full max-w-[1440px] px-4 py-7 sm:px-6 lg:px-9 lg:py-9">
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[0.72rem] leading-5 text-amber-900">
+            <span className="font-semibold">Demo dataset.</span> All records are fictional sample data.
+            Form submissions and edits are not saved to a database and disappear when the demo
+            session ends.
+          </div>
           {children}
         </main>
       </div>

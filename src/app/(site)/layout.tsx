@@ -32,6 +32,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <>
+      <div className="border-b border-gold-700/30 bg-gold-500 px-4 py-2 text-center text-[0.68rem] font-medium text-navy-950">
+        Demo website — all content is illustrative. Forms and chat do not send, save or deliver your
+        information.
+      </div>
       <JsonLd
         data={{
           "@context": "https://schema.org",

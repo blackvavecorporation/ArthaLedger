@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Info } from "lucide-react";
 
 export type AdminSearchParams = Record<string, string | string[] | undefined>;
 
@@ -28,10 +28,16 @@ export function FeedbackBanner({ params }: { params: AdminSearchParams }) {
   return (
     <div
       role="status"
-      className="mb-6 flex items-start gap-2.5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+      className="mb-6 flex items-start gap-2.5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
     >
       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
-      <span>{deleted ? "The item has been deleted." : "Your changes have been saved."}</span>
+      <div>
+        <p>{deleted ? "The demo item was removed from this session." : "The demo form accepted this change."}</p>
+        <p className="mt-1 flex items-start gap-1.5 text-[0.72rem] leading-5 text-amber-800">
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          Demo only — nothing was written to a database. The change disappears on reload or restart.
+        </p>
+      </div>
     </div>
   );
 }

@@ -34,7 +34,7 @@ export default async function ContactPage({
       <PageHero
         eyebrow="Contact us"
         title="Start with a conversation."
-        description="Tell us about your business and the support you are looking for. We will respond with a clear next step, or point you to the right professional if the matter is outside our scope."
+        description="This demo shows a complete contact experience. The form validates your input and returns a confirmation, but it does not save or send anything."
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
 
@@ -95,7 +95,7 @@ export default async function ContactPage({
                   className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#128C4A] px-4 py-3 text-[0.78rem] font-semibold text-white transition-colors hover:bg-[#0f7a40]"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  Message us on WhatsApp
+                  Demo WhatsApp link
                 </a>
               )}
             </div>
@@ -116,20 +116,20 @@ export default async function ContactPage({
 
             <div className="rounded-xl border border-navy-100 bg-navy-950 p-6 text-white">
               <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-gold-400">
-                What happens next
+                About this demo
               </p>
               <ol className="mt-3 space-y-3 text-[0.76rem] leading-6 text-white/55">
                 <li className="flex gap-2.5">
-                  <span className="text-gold-400">01</span> We review your enquiry and respond using
-                  your preferred contact details.
+                  <span className="text-gold-400">01</span> The form checks required fields and shows
+                  a confirmation.
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="text-gold-400">02</span> A short scoping conversation clarifies
-                  the requirement.
+                  <span className="text-gold-400">02</span> Nothing is stored in a database, emailed
+                  or delivered to a firm.
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="text-gold-400">03</span> We set out the proposed scope and fees in
-                  writing.
+                  <span className="text-gold-400">03</span> The office details, map and WhatsApp
+                  number are sample data for layout demonstration.
                 </li>
               </ol>
             </div>
@@ -152,8 +152,8 @@ export default async function ContactPage({
               />
             </div>
             <p className="mt-2 text-[0.65rem] text-navy-400">
-              Map data is provided by Google. The pin location should be confirmed by the firm in the
-              admin contact settings.
+              Map data is provided by Google. This is a sample Hyderabad location for demonstration
+              only.
             </p>
           </div>
         )}

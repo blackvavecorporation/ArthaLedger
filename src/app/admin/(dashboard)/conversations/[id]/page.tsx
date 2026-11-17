@@ -61,7 +61,7 @@ export default async function ConversationDetailPage({
             {conversation.messages.length === 0 ? (
               <p className="py-10 text-center text-[0.78rem] text-navy-400">No messages recorded.</p>
             ) : (
-              conversation.messages.map((message) => (
+              conversation.messages.map((message: any) => (
                 <div
                   key={message.id}
                   className={cn(
@@ -138,7 +138,7 @@ export default async function ConversationDetailPage({
             <div className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm">
               <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-navy-400">Linked enquiries</p>
               <ul className="mt-3 space-y-2">
-                {conversation.enquiries.map((enquiry) => (
+                {conversation.enquiries.map((enquiry: any) => (
                   <li key={enquiry.id}>
                     <Link
                       href={`/admin/enquiries/${enquiry.id}`}
@@ -166,7 +166,7 @@ export default async function ConversationDetailPage({
                 name={conversation.visitorName || "this conversation"}
                 label="Delete conversation"
                 title="Delete this conversation?"
-                description="The full transcript and all messages will be permanently removed. This action is logged."
+                description="The sample transcript will be removed from this demo session. Nothing is deleted from a database."
               />
             </div>
           </div>

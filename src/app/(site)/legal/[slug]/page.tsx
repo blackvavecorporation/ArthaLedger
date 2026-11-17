@@ -92,9 +92,9 @@ export default async function LegalPage({ params, searchParams }: Props) {
             <SimpleMarkdown content={page.content} />
             <div className="mt-10 rounded-lg border border-amber-200 bg-amber-50 p-4">
               <p className="text-[0.7rem] leading-6 text-amber-900">
-                These policies may contain placeholders or draft language prepared for review. The
-                firm should complete its legal details and obtain professional legal review before
-                relying on the published text.
+                Demo notice: these policies describe this demonstration deployment only. They are
+                sample copy, not legal advice, and should be replaced with reviewed policies before
+                any real launch.
               </p>
             </div>
           </article>

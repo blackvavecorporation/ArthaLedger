@@ -485,8 +485,8 @@ export function ChatWidget({
                 <p className="mt-1.5 flex items-start gap-1 text-[0.56rem] leading-3 text-navy-400">
                   <ShieldAlert className="mt-px h-2.5 w-2.5 shrink-0" />
                   {language === "te"
-                    ? "AI సహాయకుడు. పాస్‌వర్డ్, OTP లేదా బ్యాంక్ వివరాలు పంచుకోవద్దు."
-                    : "AI-assisted. Please do not share passwords, OTPs or bank credentials."}
+                    ? "డెమో సహాయకుడు. నిజమైన వ్యక్తిగత సమాచారం ఇవ్వవద్దు."
+                    : "Demo assistant. Do not enter real personal or financial information."}
                 </p>
               </div>
             </>
@@ -658,7 +658,7 @@ export function ChatWidget({
                     {view === "lead" ? "Send enquiry" : "Request consultation"}
                   </button>
                   <p className="text-center text-[0.56rem] leading-3 text-navy-400">
-                    Your details are stored securely and used only to respond to this request.
+                    Demo only — this form does not store, email or deliver your details.
                   </p>
                 </form>
               )}

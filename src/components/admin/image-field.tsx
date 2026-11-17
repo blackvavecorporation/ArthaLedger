@@ -67,7 +67,7 @@ export function ImageField({
             id={`image-url-${name}`}
             value={value}
             onChange={(event) => setValue(event.target.value)}
-            placeholder="https://res.cloudinary.com/…"
+            placeholder="https://images.example.com/…"
             className="h-9 text-xs"
           />
           <input type="hidden" name={name} value={value} />

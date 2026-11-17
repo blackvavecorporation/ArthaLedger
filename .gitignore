@@ -14,9 +14,13 @@ coverage
 .env
 .env.*
 !.env.example
+.dev.vars
+.dev.vars.*
 
-# prisma / local dev database
+# local workspace and Cloudflare build output
 .dev/
+.open-next/
+.wrangler/
 *.log
 
 # vercel

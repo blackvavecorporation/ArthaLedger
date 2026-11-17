@@ -128,7 +128,7 @@ export default async function AppointmentDetailPage({
           </div>
           <div className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm">
             <p className="text-[0.7rem] font-semibold text-navy-800">Delete request</p>
-            <p className="mt-1 text-[0.68rem] leading-5 text-navy-400">Removes this appointment and its notes permanently.</p>
+            <p className="mt-1 text-[0.68rem] leading-5 text-navy-400">Removes this sample appointment from the current demo session.</p>
             <div className="mt-3">
               <DeleteButton
                 action={deleteAppointment}
@@ -136,7 +136,7 @@ export default async function AppointmentDetailPage({
                 name={appointment.name}
                 label="Delete request"
                 title="Delete this appointment request?"
-                description="This permanently removes the request and internal notes, and records the action in the audit log."
+                description="This removes the sample request and notes from the current demo session. Nothing is deleted from a database."
               />
             </div>
           </div>

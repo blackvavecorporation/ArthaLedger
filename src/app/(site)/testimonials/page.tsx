@@ -13,9 +13,9 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
-    title: "Client Testimonials",
+    title: "Sample Testimonials",
     description:
-      "Verified, approved feedback from clients who have worked with ArthaLedger. Only genuine testimonials are published.",
+      "Illustrative testimonial layouts for the ArthaLedger demonstration website. These are sample cards, not real client reviews.",
     path: "/testimonials",
   });
 }
@@ -29,9 +29,9 @@ export default async function TestimonialsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Client testimonials"
-        title="Relationships, in our clients' own words."
-        description="We publish only feedback that a client has provided and approved. No reviews are written or commissioned by the firm on a client's behalf."
+        eyebrow="Demo testimonials"
+        title="Testimonial layout, clearly labelled."
+        description="These cards demonstrate the testimonial design with explicitly fictional sample copy. They are not real client reviews and no person or company is represented."
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Testimonials" }]}
       />
 
@@ -46,9 +46,8 @@ export default async function TestimonialsPage() {
                 Verified feedback, published with care.
               </h2>
               <p className="mt-3 text-sm leading-7 text-navy-500">
-                No client testimonials are published at present. We only display feedback that has
-                been provided by a real client and approved for publication — we do not create
-                placeholder or generated reviews.
+                No sample testimonials are available. In a live deployment, only genuine feedback
+                provided and approved by a real client should be published.
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
@@ -108,9 +107,8 @@ export default async function TestimonialsPage() {
           <div className="mt-10 flex items-start justify-center gap-2.5 text-center">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
             <p className="max-w-2xl text-[0.68rem] leading-5 text-navy-400">
-              Testimonials reflect individual client experiences and are not a guarantee of outcomes.
-              Professional services are delivered under a written engagement and applicable
-              professional standards.
+              Demo notice: every testimonial above is fictional sample copy created to demonstrate
+              the layout. These are not real client experiences, endorsements or outcome claims.
             </p>
           </div>
         </div>

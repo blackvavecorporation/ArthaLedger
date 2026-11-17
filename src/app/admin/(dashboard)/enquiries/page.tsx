@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { EnquiryStatus, Prisma } from "@prisma/client";
+import type { ContactEnquiryWhereInput, EnquiryStatus } from "@/lib/demo-types";
 import { Search } from "lucide-react";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth";
@@ -31,7 +31,7 @@ export default async function AdminEnquiriesPage({
   const page = Math.max(1, Number(first(params.page) ?? "1") || 1);
   const activeStatus = STATUSES.includes(status as EnquiryStatus) ? (status as EnquiryStatus) : undefined;
 
-  const where: Prisma.ContactEnquiryWhereInput = {
+  const where: ContactEnquiryWhereInput = {
     ...(activeStatus ? { status: activeStatus } : {}),
     ...(q
       ? {
@@ -87,7 +87,7 @@ export default async function AdminEnquiriesPage({
       <PageHeader
         eyebrow="Client desk"
         title="Enquiries"
-        description="Contact form and chatbot enquiries are stored securely. Update status, add internal notes and follow up using the contact details provided."
+        description="A sample dataset for the admin demonstration. Status and internal notes can be changed in this session, but nothing is saved to a database."
       />
       <FeedbackBanner params={params} />
 

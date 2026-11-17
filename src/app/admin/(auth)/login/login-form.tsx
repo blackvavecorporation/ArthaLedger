@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { ArrowRight, Loader2, Lock } from "lucide-react";
+import { ArrowRight, Loader2, Play } from "lucide-react";
 import { loginAction, type AuthState } from "@/actions/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,7 @@ export function LoginForm() {
   const [state, formAction, pending] = useActionState(loginAction, initialState);
 
   return (
-    <form action={formAction} className="mt-8 space-y-5">
+    <form action={formAction} className="mt-6 space-y-5">
       {state.error && (
         <div
           role="alert"
@@ -22,26 +22,26 @@ export function LoginForm() {
         </div>
       )}
       <div>
-        <Label htmlFor="email">Email address</Label>
+        <Label htmlFor="email">Demo email address</Label>
         <Input
           id="email"
           name="email"
           type="email"
           autoComplete="username"
           required
-          placeholder="you@firm.com"
+          placeholder="demo@arthaledger.example"
           className="mt-1.5"
         />
       </div>
       <div>
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Demo password</Label>
         <Input
           id="password"
           name="password"
           type="password"
           autoComplete="current-password"
           required
-          placeholder="••••••••••••"
+          placeholder="Enter the demo password above"
           className="mt-1.5"
         />
       </div>
@@ -50,13 +50,13 @@ export function LoginForm() {
         disabled={pending}
         className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-navy-900 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:opacity-60"
       >
-        {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
-        {pending ? "Verifying…" : "Sign in securely"}
+        {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+        {pending ? "Opening demo…" : "Open admin demo"}
         {!pending && <ArrowRight className="h-4 w-4" />}
       </button>
       <p className="text-center text-[0.68rem] leading-5 text-navy-400">
-        Password resets are handled by a super administrator in the server environment. Contact your
-        firm administrator if you are locked out.
+        This demo login is public by design. It is not a security boundary and must not be used
+        for real accounts or confidential information.
       </p>
     </form>
   );

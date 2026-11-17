@@ -148,7 +148,7 @@ export default async function EnquiryDetailPage({
           <div className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm">
             <p className="text-[0.7rem] font-semibold text-navy-800">Delete enquiry</p>
             <p className="mt-1 text-[0.68rem] leading-5 text-navy-400">
-              Permanently removes this record. This action is logged.
+              Removes this sample record from the current demo session.
             </p>
             <div className="mt-3">
               <DeleteButton
@@ -157,7 +157,7 @@ export default async function EnquiryDetailPage({
                 name={enquiry.name}
                 label="Delete enquiry"
                 title="Delete this enquiry?"
-                description="The message, contact details and internal notes will be permanently removed. The action will be recorded in the audit log."
+                description="The sample message, contact details and notes will be removed from this demo session. Nothing is deleted from a database."
               />
             </div>
           </div>

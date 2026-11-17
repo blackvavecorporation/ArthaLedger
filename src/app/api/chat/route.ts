@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { getSettings } from "@/lib/content";
 import {
-  generateAiReply,
   getChatbotKnowledge,
-  getConversationHistory,
   handoffReply,
-  quickReplies,
-  requiresDeterministicAnswer,
   ruleBasedReply,
   type ChatReply,
 } from "@/lib/chatbot";
@@ -34,14 +29,14 @@ export async function POST(request: Request) {
   }
 
   const ip = requestIp(request);
-  const sessionLimit = rateLimit(`chat:${ip}:${parsed.data.sessionId}`, {
+  const sessionLimit = rateLimit(`demo-chat:${ip}:${parsed.data.sessionId}`, {
     limit: 15,
     windowMs: 60 * 1000,
   });
   if (!sessionLimit.success) {
     return jsonError("You are sending messages too quickly. Please wait a moment.", 429);
   }
-  const ipLimit = rateLimit(`chat-ip:${ip}`, { limit: 60, windowMs: 10 * 60 * 1000 });
+  const ipLimit = rateLimit(`demo-chat-ip:${ip}`, { limit: 60, windowMs: 10 * 60 * 1000 });
   if (!ipLimit.success) {
     return jsonError("Chat is temporarily unavailable from this connection. Please try later.", 429);
   }
@@ -56,74 +51,25 @@ export async function POST(request: Request) {
     return jsonError("The chat assistant is currently disabled. Please use the contact form.", 503);
   }
 
-  const { sessionId, message, language } = parsed.data;
+  const { message, language } = parsed.data;
+  const knowledge = await getChatbotKnowledge();
 
-  try {
-    const knowledge = await getChatbotKnowledge();
-    const conversation = await db.chatConversation.upsert({
-      where: { sessionId },
-      create: {
-        sessionId,
-        language,
-        mode: settings.chatbotMode,
-        summary: message.slice(0, 180),
-      },
-      update: { language },
-    });
+  // The demo is intentionally deterministic: no external AI provider is called
+  // and no transcript is persisted.
+  const reply: ChatReply =
+    settings.chatbotMode === "HUMAN"
+      ? handoffReply(knowledge, language)
+      : ruleBasedReply({ message, language, knowledge });
 
-    await db.chatMessage.create({
-      data: { conversationId: conversation.id, sender: "VISITOR", content: message },
-    });
-
-    let reply: ChatReply | null = null;
-
-    if (settings.chatbotMode === "HUMAN") {
-      reply = handoffReply(knowledge, language);
-    } else if (settings.chatbotMode === "AI" && process.env.OPENAI_API_KEY) {
-      // High-risk questions (tax rates, deadlines, legal positions, credentials)
-      // always receive a deterministic, safety-reviewed answer instead of AI output.
-      if (requiresDeterministicAnswer(message)) {
-        reply = ruleBasedReply({ message, language, knowledge });
-      }
-    }
-
-    if (!reply && settings.chatbotMode === "AI" && process.env.OPENAI_API_KEY) {
-      const history = await getConversationHistory(conversation.id);
-      const aiReply = await generateAiReply({ knowledge, history, language });
-      if (aiReply) {
-        reply = {
-          reply: aiReply,
-          mode: "AI",
-          links: [],
-          quickReplies: quickReplies(language),
-        };
-      }
-    }
-
-    if (!reply) {
-      reply = ruleBasedReply({ message, language, knowledge });
-    }
-
-    await db.chatMessage.create({
-      data: { conversationId: conversation.id, sender: "ASSISTANT", content: reply.reply },
-    });
-    await db.chatConversation.update({
-      where: { id: conversation.id },
-      data: { mode: reply.mode },
-    });
-
-    return NextResponse.json(
-      {
-        ok: true,
-        reply: reply.reply,
-        mode: reply.mode,
-        links: reply.links,
-        quickReplies: reply.quickReplies,
-      },
-      { headers: { "Cache-Control": "no-store" } },
-    );
-  } catch (error) {
-    console.error("Chat request failed", error);
-    return jsonError("The assistant could not respond. Please try again or use the contact form.", 500);
-  }
+  return NextResponse.json(
+    {
+      ok: true,
+      reply: reply.reply,
+      mode: reply.mode,
+      links: reply.links,
+      quickReplies: reply.quickReplies,
+      demo: true,
+    },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

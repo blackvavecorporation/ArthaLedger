@@ -40,8 +40,8 @@ export function ChangePasswordForm() {
         </div>
       </div>
       <p className="text-[0.68rem] leading-5 text-navy-400">
-        At least 12 characters with a letter and a number. Existing sessions remain valid until they
-        expire, so sign out of shared devices separately.
+        Demo only. The password is fixed and no credential is stored. Submitting this form shows a
+        demo notice without changing anything.
       </p>
       <button
         type="submit"
@@ -49,7 +49,7 @@ export function ChangePasswordForm() {
         className="inline-flex h-10 items-center gap-2 rounded-md bg-navy-900 px-4 text-[0.78rem] font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
       >
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
-        {pending ? "Updating…" : "Update password"}
+        {pending ? "Checking…" : "Show demo notice"}
       </button>
     </form>
   );

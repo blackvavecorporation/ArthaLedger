@@ -26,7 +26,7 @@ export function ContactForm({
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
           <CheckCircle2 className="h-7 w-7" />
         </span>
-        <h2 className="mt-5 font-display text-3xl font-medium text-navy-950">Enquiry received.</h2>
+        <h2 className="mt-5 font-display text-3xl font-medium text-navy-950">Demo enquiry accepted.</h2>
         <p className="mt-3 max-w-md text-sm leading-7 text-navy-600">{state.message}</p>
         <button
           type="button"
@@ -173,8 +173,8 @@ export function ContactForm({
         {pending ? "Sending your enquiry…" : "Send enquiry"}
       </button>
       <p className="mt-3 text-center text-[0.65rem] leading-5 text-navy-400">
-        Enquiries are stored securely and reviewed by our team. Submitting this form does not create
-        a professional engagement.
+        Demo only — this form validates your input but does not store, email or deliver it. Do not
+        submit real personal or financial information.
       </p>
     </form>
   );

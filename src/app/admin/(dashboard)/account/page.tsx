@@ -19,9 +19,9 @@ export default async function AccountPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Security"
+        eyebrow="Demo account"
         title="My account"
-        description="Your profile, permissions and password. Admin sessions expire after eight hours."
+        description="A sample profile and permission view. The demo password is fixed and cannot be changed."
       />
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">

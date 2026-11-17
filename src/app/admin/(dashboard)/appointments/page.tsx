@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { AppointmentStatus, Prisma } from "@prisma/client";
+import type { AppointmentRequestWhereInput, AppointmentStatus } from "@/lib/demo-types";
 import { db } from "@/lib/db";
 import { requirePermission } from "@/lib/auth";
 import { FeedbackBanner, type AdminSearchParams } from "@/components/admin/feedback";
@@ -26,7 +26,7 @@ export default async function AdminAppointmentsPage({
   const params = await searchParams;
   const status = first(params.status);
   const activeStatus = STATUSES.includes(status as AppointmentStatus) ? (status as AppointmentStatus) : undefined;
-  const where: Prisma.AppointmentRequestWhereInput = activeStatus ? { status: activeStatus } : {};
+  const where: AppointmentRequestWhereInput = activeStatus ? { status: activeStatus } : {};
 
   const [appointments, grouped] = await Promise.all([
     db.appointmentRequest.findMany({

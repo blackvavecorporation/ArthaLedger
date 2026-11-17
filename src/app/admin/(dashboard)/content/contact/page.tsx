@@ -121,14 +121,14 @@ export default async function ContactSettingsPage({
                   hint="Shows the floating chat button on all public pages."
                 />
                 <div className="mt-5 grid gap-5 md:grid-cols-2">
-                  <Field label="Operating mode" htmlFor="chatbotMode" hint="AI requires a server-side API key. FAQ uses approved rule-based answers. Human hands off to WhatsApp/contact.">
+                  <Field label="Operating mode" htmlFor="chatbotMode" hint="Demo replies are always rule-based. AI mode is not connected to a provider in this deployment.">
                     <select id="chatbotMode" name="chatbotMode" defaultValue={settings.chatbotMode} className="admin-input">
-                      <option value="AI">AI with FAQ fallback</option>
                       <option value="FAQ">FAQ / rule-based only</option>
                       <option value="HUMAN">Human handoff only</option>
+                      <option value="AI">AI label (not connected in demo)</option>
                     </select>
                   </Field>
-                  <Field label="AI model" htmlFor="chatbotModel" hint="The model name passed to the configured OpenAI-compatible endpoint.">
+                  <Field label="Demo mode label" htmlFor="chatbotModel" hint="Display-only value. No model provider is called.">
                     <input id="chatbotModel" name="chatbotModel" required defaultValue={settings.chatbotModel} className="admin-input" />
                   </Field>
                 </div>
@@ -169,28 +169,22 @@ export default async function ContactSettingsPage({
           <div className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-gold-600" />
-              <p className="text-[0.72rem] font-semibold text-navy-900">AI configuration</p>
+              <p className="text-[0.72rem] font-semibold text-navy-900">Demo chatbot</p>
             </div>
             <p className="mt-2 text-[0.72rem] leading-6 text-navy-500">
-              AI mode calls a secure server-side endpoint. Set the following environment variables on
-              the server, never in client code:
+              This deployment uses deterministic, rule-based sample answers. It makes no external AI
+              request and reads no provider API key.
             </p>
-            <ul className="mt-3 space-y-1 font-mono text-[0.65rem] text-navy-700">
-              <li>OPENAI_API_KEY</li>
-              <li>OPENAI_BASE_URL (optional)</li>
-              <li>OPENAI_MODEL (optional fallback)</li>
-            </ul>
             <p className="mt-3 text-[0.68rem] leading-5 text-navy-400">
-              Without an API key, AI mode automatically falls back to approved FAQ/rule-based answers.
-              The assistant never invents tax rates, deadlines or legal advice, and is instructed not
-              to request passwords, OTPs or bank credentials.
+              AI mode is intentionally disabled in the database-free demo. A live deployment would
+              need a reviewed provider integration, output safeguards and an explicit privacy notice.
             </p>
           </div>
           <div className="rounded-xl border border-navy-100 bg-white p-5 shadow-sm">
             <p className="text-[0.72rem] font-semibold text-navy-900">Privacy reminder</p>
             <p className="mt-2 text-[0.7rem] leading-6 text-navy-500">
-              Chat transcripts and lead details are stored in the database for follow-up. Retain them
-              only as long as necessary and keep administrative access restricted.
+              Chat text is kept in the visitor's browser local storage for this demo. No transcript
+              or lead details are sent to the server for storage.
             </p>
           </div>
         </div>

@@ -31,7 +31,7 @@ export default async function AdminConversationsPage({
       <PageHeader
         eyebrow="Client desk"
         title="Chat conversations"
-        description={`${total} conversation${total === 1 ? "" : "s"} recorded by the website assistant, including ${leads} captured lead${leads === 1 ? "" : "s"}. Transcripts are stored to support follow-up.`}
+        description={`${total} sample conversation${total === 1 ? "" : "s"}, including ${leads} sample lead${leads === 1 ? "" : "s"}. These transcripts illustrate the client-desk layout and are not live records.`}
       />
       <FeedbackBanner params={params} />
 
@@ -90,8 +90,8 @@ export default async function AdminConversationsPage({
       )}
 
       <p className="mt-4 text-[0.65rem] leading-5 text-navy-400">
-        Conversations may contain personal information. Access is restricted to authorised admin
-        users and deletions are recorded in the audit log.
+        Demo notice: these conversations are fictional sample data. There is no real visitor, no
+        database and no server-side transcript storage in this deployment.
       </p>
     </>
   );

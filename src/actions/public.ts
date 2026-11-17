@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { audit, getClientIp, getRequestContext } from "@/lib/auth";
+import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { contactSchema, fieldErrors } from "@/lib/validation";
 
@@ -16,19 +16,16 @@ export async function submitContact(
   formData: FormData,
 ): Promise<ContactState> {
   const ip = await getClientIp();
-  const context = await getRequestContext();
-
-  const limit = rateLimit(`contact:${ip}`, { limit: 5, windowMs: 10 * 60 * 1000 });
+  const limit = rateLimit(`demo-contact:${ip}`, { limit: 5, windowMs: 10 * 60 * 1000 });
   if (!limit.success) {
     return {
       status: "error",
-      message: `Too many enquiries from this connection. Please try again in ${Math.ceil(limit.retryAfterSeconds / 60)} minute(s).`,
+      message: `Too many demo submissions from this connection. Please try again in ${Math.ceil(limit.retryAfterSeconds / 60)} minute(s).`,
     };
   }
 
-  // Honeypot: bots that fill hidden fields get a generic success without a record.
   if (String(formData.get("website") ?? "").length > 0) {
-    return { status: "success", message: "Thank you. Our team will review your enquiry." };
+    return { status: "success", message: "Demo submission received. Nothing was stored or sent." };
   }
 
   const parsed = contactSchema.safeParse({
@@ -49,53 +46,17 @@ export async function submitContact(
     };
   }
 
-  const data = parsed.data;
-  let serviceId: string | null = null;
   let serviceName: string | null = null;
-  if (data.serviceId) {
+  if (parsed.data.serviceId) {
     const service = await db.service.findFirst({
-      where: { id: data.serviceId, status: "PUBLISHED" },
-      select: { id: true, title: true },
+      where: { id: parsed.data.serviceId, status: "PUBLISHED" },
+      select: { title: true },
     });
-    if (service) {
-      serviceId = service.id;
-      serviceName = service.title;
-    }
-  }
-
-  try {
-    const enquiry = await db.contactEnquiry.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        serviceId,
-        serviceName,
-        message: data.message,
-        status: "NEW",
-        source: "CONTACT_FORM",
-        ipAddress: context.ip,
-        userAgent: context.userAgent,
-      },
-    });
-    await audit({
-      action: "enquiry.received",
-      entity: "ContactEnquiry",
-      entityId: enquiry.id,
-      details: { source: "CONTACT_FORM", service: serviceName },
-      ipAddress: ip,
-    });
-  } catch (error) {
-    console.error("Contact enquiry failed", error);
-    return {
-      status: "error",
-      message: "We could not save your enquiry. Please try again or contact the office directly.",
-    };
+    serviceName = service?.title ?? null;
   }
 
   return {
     status: "success",
-    message:
-      "Thank you — your enquiry has been received. Our team will review it and respond using the contact details you provided.",
+    message: `Demo only: your ${serviceName ? `“${serviceName}” ` : ""}enquiry passed validation, but it was not stored, emailed or added to a database.`,
   };
 }

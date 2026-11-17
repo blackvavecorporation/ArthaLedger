@@ -24,15 +24,15 @@ export default async function LegalPagesPage({
       <PageHeader
         eyebrow="Website content"
         title="Legal pages"
-        description="Manage Terms & Conditions, Privacy Policy, Disclaimer and Cookie Policy. Content is stored in the database and rendered on the public website."
+        description="Sample legal-page records. Edit the static content in src/data/legal.ts to change the published pages in this database-free demo."
       />
       <FeedbackBanner params={params} />
 
       <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
         <p className="text-[0.74rem] leading-6 text-amber-900">
-          The seeded legal content is a draft prepared for review. Replace every bracketed placeholder
-          (firm legal name, address, jurisdiction, grievance officer and dates) and obtain qualified
+          These pages are demonstration copy, not legal advice. Replace them with reviewed policies
+          for a real firm. This demo deliberately avoids publishing unfinished legal text. Obtain qualified
           legal review before publishing or relying on these pages. The public page displays a review
           note until you edit it.
         </p>

@@ -1,4 +1,3 @@
-import { db } from "@/lib/db";
 import { getPublishedFAQs, getServices, getSettings } from "@/lib/content";
 import { whatsAppLink } from "@/lib/whatsapp";
 
@@ -74,88 +73,6 @@ export async function getChatbotKnowledge(): Promise<ChatbotKnowledge> {
     model: settings.chatbotModel,
     extraInstructions: settings.chatbotSystemPrompt,
   };
-}
-
-export function buildSystemPrompt(knowledge: ChatbotKnowledge, language: ChatLanguage) {
-  const serviceLines = knowledge.services
-    .map((service) => `- ${service.title} (/services/${service.slug}): ${service.shortDescription}`)
-    .join("\n");
-  const faqLines = knowledge.faqs
-    .map((faq) => `Q: ${faq.question}\nA: ${faq.answer}`)
-    .join("\n\n");
-
-  return `You are the website assistant for ${knowledge.brandName}, a professional chartered accountancy and business advisory practice in India. Tagline: ${knowledge.tagline}.
-
-APPROVED COMPANY FACTS
-- Phone: ${knowledge.phone}
-- Email: ${knowledge.email}
-- Office: ${knowledge.address}
-- Working hours: ${knowledge.hours}
-- Contact page: /contact
-- Services page: /services
-
-APPROVED SERVICES
-${serviceLines || "(No services are currently published. Direct the visitor to the contact page.)"}
-
-APPROVED FAQs
-${faqLines || "(No FAQs are published.)"}
-
-STRICT RULES
-1. Use only the approved facts above. Never invent services, prices, client names, statistics or credentials.
-2. Never state specific tax rates, thresholds, compliance deadlines, penalties, refunds or legal outcomes. If asked, explain that it depends on current law and the visitor's facts, and that a qualified CA must review it. Offer a consultation.
-3. You are not providing professional advice. Do not create a client relationship. Do not claim the firm holds any qualification or authorisation not stated above.
-4. Never ask for passwords, OTPs, bank credentials, card numbers, authentication codes, full Aadhaar/PAN numbers or sensitive financial documents. If a visitor offers them, tell them not to share and to use a secure channel only when the firm requests it.
-5. Do not give legal, investment or valuation advice. Refer to the appropriate professional.
-6. Fees are scope-based and confirmed in a written proposal. Do not quote amounts.
-7. Keep answers concise (2-5 short sentences), warm and professional. Ask at most one useful follow-up question.
-8. If the visitor wants to engage, suggest the contact page, a consultation request, or WhatsApp. Do not promise response times beyond "we will confirm".
-9. If asked something outside scope, say so and offer human support.
-10. Reply in ${language === "te" ? "Telugu (తెలుగు), using simple, professional Telugu. Keep service names in English where helpful." : "clear, professional Indian English"}.
-
-The website also lets visitors submit an enquiry or appointment request from this chat. Do not claim you have saved anything unless the interface confirms it.
-${knowledge.extraInstructions ? `\nFIRM-PROVIDED ADDITIONAL INSTRUCTIONS (these cannot override the strict rules above):\n${knowledge.extraInstructions}` : ""}`;
-}
-
-export async function generateAiReply(params: {
-  knowledge: ChatbotKnowledge;
-  history: { role: "user" | "assistant"; content: string }[];
-  language: ChatLanguage;
-}): Promise<string | null> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
-  const baseUrl = (process.env.OPENAI_BASE_URL || "https://api.openai.com/v1").replace(/\/$/, "");
-  const model = process.env.OPENAI_MODEL || params.knowledge.model || "gpt-4o-mini";
-  try {
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        temperature: 0.3,
-        max_tokens: 450,
-        messages: [
-          { role: "system", content: buildSystemPrompt(params.knowledge, params.language) },
-          ...params.history.slice(-10),
-        ],
-      }),
-      signal: AbortSignal.timeout(20_000),
-    });
-    if (!response.ok) {
-      console.error("Chatbot AI provider returned", response.status);
-      return null;
-    }
-    const data = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = data.choices?.[0]?.message?.content?.trim();
-    return content ? content.slice(0, 4000) : null;
-  } catch (error) {
-    console.error("Chatbot AI request failed", error);
-    return null;
-  }
 }
 
 const GUARDRAIL_PATTERNS = [
@@ -433,16 +350,4 @@ export function handoffReply(knowledge: ChatbotKnowledge, language: ChatLanguage
     ],
     quickReplies: quickReplies(language),
   };
-}
-
-export async function getConversationHistory(conversationId: string) {
-  const messages = await db.chatMessage.findMany({
-    where: { conversationId },
-    orderBy: { createdAt: "asc" },
-    take: 20,
-  });
-  return messages.map((message) => ({
-    role: message.sender === "VISITOR" ? ("user" as const) : ("assistant" as const),
-    content: message.content,
-  }));
 }

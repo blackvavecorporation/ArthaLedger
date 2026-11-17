@@ -55,7 +55,7 @@ export default async function AboutPage() {
           <div>
             <SectionHeading eyebrow="Our story" title="Built around the realities of running a business" />
             <div className="mt-6 space-y-5 text-[0.92rem] leading-8 text-navy-600">
-              {about.story.split(/\n{2,}/).map((paragraph) => (
+              {about.story.split(/\n{2,}/).map((paragraph: string) => (
                 <p key={paragraph.slice(0, 40)}>{paragraph}</p>
               ))}
             </div>
@@ -188,7 +188,7 @@ export default async function AboutPage() {
                         {member.name
                           .split(" ")
                           .slice(0, 2)
-                          .map((part) => part[0])
+                          .map((part: string) => part[0])
                           .join("")}
                       </span>
                     )}

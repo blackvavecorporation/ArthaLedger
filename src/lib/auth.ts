@@ -1,11 +1,11 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import bcrypt from "bcryptjs";
-import type { RoleName } from "@prisma/client";
+import type { RoleName } from "@/lib/demo-types";
 import { db } from "@/lib/db";
 import { can, type Permission } from "@/lib/permissions";
 import { SESSION_COOKIE, SESSION_MAX_AGE, signSession, verifySession } from "@/lib/session";
+import { DEMO_PASSWORD } from "@/data/site";
 
 export type CurrentUser = {
   id: string;
@@ -16,12 +16,22 @@ export type CurrentUser = {
   isActive: boolean;
 };
 
-export async function hashPassword(password: string) {
-  return bcrypt.hash(password, 12);
+const DEMO_USER: CurrentUser = {
+  id: "demo-admin",
+  name: "Demo Administrator",
+  email: "demo@arthaledger.example",
+  role: "SUPER_ADMIN",
+  roleLabel: "SUPER ADMIN",
+  isActive: true,
+};
+
+// Demo-only helpers. No password is hashed or stored anywhere.
+export async function hashPassword(_password: string) {
+  return "demo-only-no-password-hash";
 }
 
-export async function verifyPassword(password: string, hash: string) {
-  return bcrypt.compare(password, hash);
+export async function verifyPassword(password: string, _hash?: string) {
+  return password === DEMO_PASSWORD;
 }
 
 export async function createSession(user: {
@@ -55,21 +65,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const store = await cookies();
   const session = await verifySession(store.get(SESSION_COOKIE)?.value);
   if (!session) return null;
-
-  const user = await db.adminUser.findUnique({
-    where: { id: session.sub },
-    include: { role: true },
-  });
-  if (!user || !user.isActive) return null;
-
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role.name,
-    roleLabel: user.role.name.replace("_", " "),
-    isActive: user.isActive,
-  };
+  return { ...DEMO_USER, name: session.name, email: session.email, role: session.role as RoleName };
 }
 
 export async function requireUser() {
@@ -125,11 +121,11 @@ export async function audit(params: {
         action: params.action,
         entity: params.entity,
         entityId: params.entityId ?? null,
-        details: params.details as never,
+        details: params.details ?? { demo: true },
         ipAddress: params.ipAddress ?? null,
       },
     });
   } catch (error) {
-    console.error("Failed to write audit log", error);
+    console.error("Failed to write demo audit log", error);
   }
 }

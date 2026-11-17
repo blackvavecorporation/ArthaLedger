@@ -154,7 +154,7 @@ export default async function ServiceDetailPage({ params, searchParams }: Props)
                     What the engagement includes
                   </h2>
                   <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-                    {service.benefits.map((benefit) => (
+                    {service.benefits.map((benefit: string) => (
                       <li key={benefit} className="flex items-start gap-2.5 text-[0.82rem] leading-6 text-navy-600">
                         <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-gold-600" />
                         {benefit}

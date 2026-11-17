@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, LockKeyhole, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Database, FlaskConical, ShieldCheck } from "lucide-react";
 import { Brand } from "@/components/site/brand";
 import { getSettings } from "@/lib/content";
 
@@ -15,7 +15,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     logoUrl = settings.logoUrl;
     tagline = settings.tagline;
   } catch {
-    // The login page should still render if settings are unavailable.
+    // The demo login page should still render if content is unavailable.
   }
 
   return (
@@ -33,26 +33,32 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           <Brand name={brandName} logoUrl={logoUrl} theme="dark" />
         </div>
         <div className="relative max-w-md">
-          <p className="eyebrow eyebrow-light">Secure administration</p>
+          <p className="eyebrow eyebrow-light">Admin demonstration</p>
           <h1 className="mt-5 font-display text-4xl font-medium leading-[1.15]">
-            The private workspace behind {brandName}.
+            Explore the workspace behind {brandName}.
           </h1>
           <p className="mt-5 text-sm leading-7 text-white/55">
-            Manage services, website content, enquiries and client conversations from one controlled
-            dashboard.
+            Browse the dashboard, CMS forms, enquiry screens and client-desk views using a fixed
+            sample dataset. No live data is involved.
           </p>
           <ul className="mt-10 space-y-4 text-[0.8rem] text-white/55">
             <li className="flex items-center gap-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gold-400/30 bg-gold-500/10 text-gold-300">
-                <LockKeyhole className="h-3.5 w-3.5" />
+                <FlaskConical className="h-3.5 w-3.5" />
               </span>
-              Server-side session checks on every admin request
+              Public demo login with documented credentials
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gold-400/30 bg-gold-500/10 text-gold-300">
+                <Database className="h-3.5 w-3.5" />
+              </span>
+              No database, migrations or server-side persistence
             </li>
             <li className="flex items-center gap-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gold-400/30 bg-gold-500/10 text-gold-300">
                 <ShieldCheck className="h-3.5 w-3.5" />
               </span>
-              Role-based access and audit logging
+              No real client information or access control claim
             </li>
           </ul>
         </div>
@@ -76,7 +82,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
           <div className="w-full max-w-[26rem]">{children}</div>
         </div>
         <p className="px-5 pb-6 text-center text-[0.65rem] text-navy-400">
-          Authorised access only. Activity may be logged for security.
+          Demo environment only. Do not enter real personal or client information.
         </p>
       </div>
     </div>

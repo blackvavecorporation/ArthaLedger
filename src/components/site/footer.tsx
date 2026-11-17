@@ -163,9 +163,9 @@ export function Footer({
             </div>
           </div>
           <p className="mt-4 max-w-4xl text-[0.68rem] leading-5 text-white/30">
-            This website provides general information about the firm and its services. It is not
-            professional advice and does not create a client relationship. Regulated services are
-            undertaken only where the firm holds the applicable qualifications and authorisations.
+            Demonstration website. All firm details, services, testimonials and contact information
+            are sample content. The site is not professional advice, does not represent a real firm,
+            and the forms do not store or deliver submissions.
           </p>
         </div>
       </div>

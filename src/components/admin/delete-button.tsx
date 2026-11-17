@@ -30,7 +30,7 @@ export function DeleteButton({
   name,
   label = "Delete",
   title = "Delete this item?",
-  description = "This action cannot be undone. The item will be permanently removed.",
+  description = "This removes the item from the current demo session only. No database record exists.",
   className,
   compact = false,
   extraFields,

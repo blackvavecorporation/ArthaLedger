@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Testimonial } from "@prisma/client";
+import type { Testimonial } from "@/lib/demo-types";
 import { Save, ShieldCheck } from "lucide-react";
 import { saveTestimonial } from "@/actions/inquiries";
 import { CheckboxField, Field, FormActions, FormGrid, FormSection } from "@/components/admin/form";

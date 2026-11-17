@@ -36,14 +36,14 @@ export default async function AuditLogsPage({
   return (
     <>
       <PageHeader
-        eyebrow="Security"
+        eyebrow="Demo data"
         title="Audit logs"
-        description="A chronological record of important admin actions, including sign-ins, content changes, publishing, enquiries and deletions."
+        description="A sample chronological activity view. Demo actions may appear here for the running session, but no audit record is written to a database."
       />
       <FeedbackBanner params={params} />
 
       {logs.length === 0 ? (
-        <EmptyState title="No audit events" description="Admin activity will be recorded here as it occurs." />
+        <EmptyState title="No demo audit events" description="Sample admin activity may appear here during the running demo session." />
       ) : (
         <>
           <div className="overflow-hidden rounded-xl border border-navy-100 bg-white shadow-sm">

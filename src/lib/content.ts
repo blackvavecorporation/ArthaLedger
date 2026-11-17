@@ -1,24 +1,22 @@
 import { cache } from "react";
-import type { NavLocation } from "@prisma/client";
+import type { NavLocation } from "@/lib/demo-types";
 import { db } from "@/lib/db";
 
 export const getSettings = cache(async () => {
   const settings = await db.websiteSettings.findUnique({ where: { id: "main" } });
-  if (!settings) {
-    throw new Error("Website settings are not initialised. Run the database seed.");
-  }
+  if (!settings) throw new Error("Demo website settings are missing.");
   return settings;
 });
 
 export const getHomeContent = cache(async () => {
   const content = await db.homePageContent.findUnique({ where: { id: "main" } });
-  if (!content) throw new Error("Home page content is not initialised. Run the database seed.");
+  if (!content) throw new Error("Demo home page content is missing.");
   return content;
 });
 
 export const getAboutContent = cache(async () => {
   const content = await db.aboutPageContent.findUnique({ where: { id: "main" } });
-  if (!content) throw new Error("About page content is not initialised. Run the database seed.");
+  if (!content) throw new Error("Demo about page content is missing.");
   return content;
 });
 

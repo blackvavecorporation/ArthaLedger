@@ -46,7 +46,7 @@ export function getSiteUrl() {
   return (
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
     process.env.SITE_URL?.replace(/\/$/, "") ||
-    "http://localhost:3000"
+    "https://arthaledger.blackvavecorporation.workers.dev"
   );
 }
 
